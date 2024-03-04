@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "pyplayer"
+version = "0.1.0"
+description = ""
+authors = ["L140-beep <kartoshka0302@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydub = "^0.25.1"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.8.0"
+flake8-docstrings = "^1.7.0"
+flake8-import-order = "^0.18.2"
+flake8-quotes = "^3.4.0"
+flake8-pyproject = "^1.2.3"
+
+[tool.flake8]
+import-order-style="pep8"
+inline-quotes = "single"
+ignore=["D107", "W504"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
