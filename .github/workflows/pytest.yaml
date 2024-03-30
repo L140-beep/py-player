@@ -20,7 +20,7 @@ jobs:
         pip install poetry
         python -m venv .venv
         poetry install
-    - name: Running mypy
+    - name: Running pytest
       run: |
         source ./.venv/bin/activate
         pytest

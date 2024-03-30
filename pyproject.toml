@@ -10,6 +10,7 @@ python = "^3.10"
 pydub = "^0.25.1"
 pyqt5 = "=5.15.10"   
 pyqt5-qt5 = "=5.15.2"
+pyaudio = "^0.2.14"
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -20,6 +21,7 @@ flake8-docstrings = "^1.7.0"
 flake8-import-order = "^0.18.2"
 flake8-quotes = "^3.4.0"
 flake8-pyproject = "^1.2.3"
+pytest = "^8.1.0"
 
 [tool.flake8]
 import-order-style="pep8"
