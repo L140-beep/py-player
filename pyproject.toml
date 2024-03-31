@@ -11,6 +11,8 @@ pydub = "^0.25.1"
 pyqt5 = "=5.15.10"   
 pyqt5-qt5 = "=5.15.2"
 pyaudio = "^0.2.14"
+eyed3 = "^0.9.7"
+just-playback = "^0.1.8"
 
 [tool.mypy]
 ignore_missing_imports = true

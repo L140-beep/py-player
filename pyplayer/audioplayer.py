@@ -1,10 +1,23 @@
 """Module implements music playback."""
-
+from typing import Protocol, Any
 from threading import Event
+ 
+import eyed3
+from eyed3 import id3
 from pydub import AudioSegment
-from pydub.playback import play, _play_with_simpleaudio
 import pyaudio
-from typing import Protocol
+
+
+class MusicMeta(Protocol):
+    title: str
+    artist: str
+    album: str
+    images: id3.tag.ImagesAccessor
+    album_artist: str
+    composer: str
+    publisher: str
+    genre: str
+    release_date: str
 
 
 class Music(Protocol):
@@ -25,6 +38,7 @@ class AudioPlayer:
         self.playback = None
         self.p = pyaudio.PyAudio()
         self.last = 0
+        self.time = 0.
 
     def play(self, path: str, killPill: Event) -> None:
         """Play music."""
@@ -38,16 +52,28 @@ class AudioPlayer:
                 rate=music.frame_rate,
                 output=True
             )
+            audio_meta: MusicMeta = eyed3.load(path).tag
+            # for img in audio_meta.images:
+            #     typed_img: id3.frames.ImageFrame = img
+            #     with open('test.jpg', 'wb') as f:
+            #         f.write(typed_img.image_data)
+            #         print('hereere')
+            #     break
+            # print(type(audio_meta.images))
+            print(len(music.raw_data), len(music._data))
             for i in range(self.last, len(music.raw_data), CHUNK):
                 if killPill.is_set():
-                    print('hertrr')
                     self.last = i
                     self.pause()
                     break
                 self.stream.write(music.raw_data[i:i + CHUNK])
-        except Exception:
+        except Exception as e:
+            print(e)
             return
 
     def pause(self) -> None:
+        self.time = self.stream.get_time()
+        print(self.stream.get_write_available())
+        print(self.time)
         self.stream.close()
         self.stream.stop_stream()
