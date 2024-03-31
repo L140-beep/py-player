@@ -27,19 +27,16 @@ class mywindow(QtWidgets.QMainWindow):
 
     def playAudio(self, killPill: Event):
         self.killThread.clear()
-        self.player.play('demos/Korol_i_SHut_-_Kukla_kolduna_62570545.mp3', killPill)
+        self.player.play(
+            'demos/Korol_i_SHut_-_Kukla_kolduna_62570545.mp3', killPill)
 
     def clickedPauseBtn(self):
         self.killThread.set()
+        self.player.pause()
 
     def clickedPlayBtn(self):
         self.audio_thread = self.createAudioThread()
         self.audio_thread.start()
-
-    def closeEvent(self, a0: QCloseEvent | None) -> None:
-        self.killThread.set()
-        return super().closeEvent(a0)
-    # TODO: убить тред
 
 
 if __name__ == '__main__':
