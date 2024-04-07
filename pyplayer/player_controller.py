@@ -1,3 +1,4 @@
+import io
 from threading import Thread, Event
 
 from PyQt5.QtGui import QPixmap, QCloseEvent
@@ -6,10 +7,12 @@ from .audioplayer import AudioPlayer
 from .interfaces.mainwindow import Ui_MainWindow
 
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import QRect
+from PIL import Image
 
-# TODO: Сжимать изображение
 # TODO: перемещение слайдера
 # TODO: Кэширование музыки
+# TODO: Список музыки из папок.
 
 
 class Player(QtWidgets.QMainWindow):
@@ -31,14 +34,14 @@ class Player(QtWidgets.QMainWindow):
             if killPill.is_set():
                 break
             self._set_current_time()
-            self._set_slidet_position(self.player.seconds_current_time)
+            self._set_slider_position(self.player.seconds_current_time)
 
-    def _set_slidet_position(self, pos: int) -> None:
+    def _set_slider_position(self, pos: int) -> None:
         self.ui.time_bar.setSliderPosition(pos)
 
     def _set_range(self, min: int, max: int):
         self.ui.time_bar.setRange(min, max)
-        self._set_slidet_position(0)
+        self._set_slider_position(0)
 
     def _set_current_time(self):
         self.ui.currenttime_label.setText(self.player.current_time)
@@ -50,9 +53,16 @@ class Player(QtWidgets.QMainWindow):
         self.ui.songname_label.setText(self.player.music_meta.title)
 
     def __set_song_image(self) -> None:
-        image = self.player.music_meta.images[0]
+        original_image = self.player.music_meta.images[0].image_data
+        image = Image.open(io.BytesIO(original_image))
+        geometry: QRect = self.ui.songpicture_label.geometry()
+        width = geometry.width()
+        height = geometry.height()
+        resized = image.resize((width, height))
+        bytes_buf = io.BytesIO()
+        resized.save(bytes_buf, 'JPEG')
         pixmap = QPixmap()
-        pixmap.loadFromData(image.image_data)
+        pixmap.loadFromData(bytes_buf.getvalue())
         self.ui.songpicture_label.setPixmap(pixmap)
 
     def __create_audio_thread(self) -> Thread:
@@ -60,7 +70,7 @@ class Player(QtWidgets.QMainWindow):
 
     def play_audio(self) -> None:
         self.player.play(
-            'demos/Radiohead_-_Creep_48022418.mp3')
+            'demos/Korol_i_SHut_-_Kukla_kolduna_62570545.mp3')
         if not self.currentTime.is_alive():
             self.currentTime.start()
         self.__set_song_duration()
