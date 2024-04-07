@@ -20,7 +20,8 @@ class Ui_MainWindow(object):
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(290, 323, 301, 101))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(
+            self.verticalLayoutWidget)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.songname_label = QtWidgets.QLabel(self.verticalLayoutWidget)
@@ -72,8 +73,10 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.songname_label.setText(_translate("MainWindow", "Songname"))
         self.artistname_label.setText(_translate("MainWindow", "Artist"))
-        self.currenttime_label.setText(_translate("MainWindow", "Current time"))
-        self.songduration_label.setText(_translate("MainWindow", "Song duration"))
+        self.currenttime_label.setText(
+            _translate("MainWindow", "Current time"))
+        self.songduration_label.setText(
+            _translate("MainWindow", "Song duration"))
         self.play_button.setText(_translate("MainWindow", "Play"))
         self.pause_button.setText(_translate("MainWindow", "Pause"))
         self.songpicture_label.setText(_translate("MainWindow", "TextLabel"))

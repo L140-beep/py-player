@@ -1,6 +1,5 @@
 """Module implements music playback."""
-from typing import Protocol, Any
-from threading import Event
+from typing import Protocol
 
 from just_playback import Playback
 import eyed3
@@ -8,6 +7,8 @@ from eyed3 import id3
 
 
 class MusicMeta(Protocol):
+    """Meta information from mp3."""
+
     title: str
     artist: str
     album: str
@@ -20,6 +21,8 @@ class MusicMeta(Protocol):
 
 
 class Music(Protocol):
+    """Audio properties."""
+
     sample_width: int
     frame_rate: int
     channels: int
@@ -41,32 +44,37 @@ class AudioPlayer:
 
     @property
     def music_meta(self) -> MusicMeta:
+        """Получить мета-информацию о текущей песне."""
         if self.__music_meta is None:
             raise Exception()
         return self.__music_meta
 
     @property
     def seconds_current_time(self) -> int:
+        """Текущий тайминг музыки в секундах."""
         return int(self.p.curr_pos)
 
     @property
     def seconds_duration(self) -> int:
+        """Длительность текущей песни в секундах."""
         return int(self.p.duration)
 
     @property
     def current_time(self) -> str:
+        """Текущий тайминг времени в виде строки mm:ss."""
         minutes = int(self.p.curr_pos // 60)
         seconds = int(self.p.curr_pos - minutes * 60)
         return f'{str(minutes).zfill(2)}:{str(seconds).zfill(2)}'
 
     @property
     def duration(self) -> str:
+        """Длительность текущей песни в виде строки mm:ss."""
         minutes = int(self.p.duration // 60)
         seconds = int(self.p.duration - minutes * 60)
         return f'{str(minutes).zfill(2)}:{str(seconds).zfill(2)}'
 
     def play(self, path: str) -> None:
-        """Play music."""
+        """Начать проигрывание музыки."""
         try:
             self.p.load_file(path)
             self.p.play()
@@ -77,5 +85,6 @@ class AudioPlayer:
             return
 
     def pause(self) -> None:
+        """Пауза музыки."""
         self.last = self.p.curr_pos
         self.p.pause()
