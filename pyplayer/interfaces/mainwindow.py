@@ -10,7 +10,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -28,9 +27,6 @@ class Ui_MainWindow(object):
         self.songname_label.setAlignment(QtCore.Qt.AlignCenter)
         self.songname_label.setObjectName("songname_label")
         self.verticalLayout_3.addWidget(self.songname_label)
-        self.time_bar = QtWidgets.QSlider(self.verticalLayoutWidget)
-        self.time_bar.setOrientation(QtCore.Qt.Horizontal)
-        self.time_bar.setObjectName("time_bar")
         self.verticalLayout_3.addWidget(self.time_bar)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")

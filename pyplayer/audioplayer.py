@@ -73,9 +73,15 @@ class AudioPlayer:
         seconds = int(self.p.duration - minutes * 60)
         return f'{str(minutes).zfill(2)}:{str(seconds).zfill(2)}'
 
+    def set_music_time(self, seconds: int) -> None:
+        self.p.seek(seconds)
+        self.last = seconds
+
     def play(self, path: str) -> None:
         """Начать проигрывание музыки."""
         try:
+            if self.p.playing:
+                return
             self.p.load_file(path)
             self.p.play()
             self.p.seek(self.last)

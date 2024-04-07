@@ -1,31 +1,74 @@
 import io
+import time
 from threading import Thread, Event
 
-from PyQt5.QtGui import QPixmap, QCloseEvent
-
+from .click_slider import ClickSlider
 from .audioplayer import AudioPlayer
 from .interfaces.mainwindow import Ui_MainWindow
 
+from PyQt5.QtGui import QPixmap, QCloseEvent, QMouseEvent
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QRect
+from PyQt5.QtCore import QRect, Qt, QEvent, pyqtSignal, QPoint
 from PIL import Image
 
 # TODO: перемещение слайдера
 # TODO: Кэширование музыки
 # TODO: Список музыки из папок.
+# TODO: Сделать так, чтобы та
+
+
+def time_slider_clicked(slider: ClickSlider, event: QMouseEvent | None, player: "Player"):
+    # self.slider_pressed = True
+    if (event is not None and
+        event.button() == Qt.MouseButton.LeftButton and
+            slider.underMouse()):
+        # if (self.last_slider_pressed is not None and
+        #     time.time() - self.last_slider_pressed < 0.5):
+        player.set_slider_position(int(slider.minimum() + ((slider.maximum() -
+                                                            slider.minimum()) * event.x()) / slider.width()))
+        player.player.set_music_time(slider.sliderPosition())
+        event.accept()
+    # player.mouseReleaseEvent(event)
+    player.slider_pressed = False
 
 
 class Player(QtWidgets.QMainWindow):
     def __init__(self):
         super(Player, self).__init__()
         self.ui = Ui_MainWindow()
+        self.ui.time_bar = ClickSlider(None, time_slider_clicked, [self])
+        self.ui.time_bar.setOrientation(Qt.Horizontal)
+        self.ui.time_bar.setObjectName('time_bar')
         self.ui.setupUi(self)
         self.ui.play_button.clicked.connect(self._clicked_play_btn)
         self.ui.pause_button.clicked.connect(self._clicked_pause_btn)
+        self.ui.time_bar.sliderReleased.connect(self.__time_slider_released)
+        self.ui.time_bar.sliderPressed.connect(self.__time_slider_pressed)
         self.player = AudioPlayer()
         self.killPill = Event()
+        self.last_slider_pressed = None
+        self.slider_pressed = False
         self.currentTime = Thread(
             target=self.__loop_set_current_duration, args=(self.killPill,))
+        self.timeSliderClicked = pyqtSignal(QPoint)
+        # self.ui.time_bar.mouseReleaseEvent = self._time_slider_clicked
+
+    def _configUi(self):
+        ...
+
+    def __time_slider_pressed(self):
+        # Почему-то в эту функцию заходит только один раз,
+        # и я не понимаю почему
+        print('pressed')
+        self.slider_pressed = True
+        self.last_slider_pressed = time.time()
+
+    def __time_slider_released(self):
+        # А сюда вообще не заходит
+        print('released')
+        ttime = self.ui.time_bar.sliderPosition()
+        self.player.set_music_time(ttime)
+        self.slider_pressed = False
 
     def __loop_set_current_duration(self, killPill: Event):
         """В отдельном потоке постоянно обновляем\
@@ -33,17 +76,19 @@ class Player(QtWidgets.QMainWindow):
         while True:
             if killPill.is_set():
                 break
-            self._set_current_time()
-            self._set_slider_position(self.player.seconds_current_time)
+            self.__set_current_time()
+            if self.slider_pressed:
+                continue
+            self.set_slider_position(self.player.seconds_current_time)
 
-    def _set_slider_position(self, pos: int) -> None:
+    def set_slider_position(self, pos: int) -> None:
         self.ui.time_bar.setSliderPosition(pos)
 
-    def _set_range(self, min: int, max: int):
+    def __set_range(self, min: int, max: int):
         self.ui.time_bar.setRange(min, max)
-        self._set_slider_position(0)
+        self.set_slider_position(0)
 
-    def _set_current_time(self):
+    def __set_current_time(self):
         self.ui.currenttime_label.setText(self.player.current_time)
 
     def __set_song_duration(self) -> None:
@@ -77,7 +122,7 @@ class Player(QtWidgets.QMainWindow):
         self.__set_song_image()
         self.__set_song_name()
         self.__set_artist_name()
-        self._set_range(0, self.player.seconds_duration)
+        self.__set_range(0, self.player.seconds_duration)
 
     def __set_artist_name(self) -> None:
         self.ui.artistname_label.setText(self.player.music_meta.artist)
