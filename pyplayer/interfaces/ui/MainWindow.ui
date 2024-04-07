@@ -14,57 +14,85 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="gridLayoutWidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>9</x>
-      <y>40</y>
-      <width>16</width>
-      <height>16</height>
+      <x>290</x>
+      <y>323</y>
+      <width>301</width>
+      <height>101</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout"/>
-   </widget>
-   <widget class="QWidget" name="gridLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>280</y>
-      <width>381</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0" colspan="2">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QLabel" name="songname_label">
+       <property name="text">
+        <string>Songname</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QSlider" name="time_bar">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="play_button">
-       <property name="text">
-        <string>Play</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="artistname_label">
+         <property name="text">
+          <string>Artist</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="currenttime_label">
+         <property name="text">
+          <string>Current time</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="songduration_label">
+         <property name="text">
+          <string>Song duration</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="1" column="0">
-      <widget class="QPushButton" name="pause_button">
-       <property name="text">
-        <string>Pause</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="play_button">
+         <property name="text">
+          <string>Play</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pause_button">
+         <property name="text">
+          <string>Pause</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="time_label">
+   <widget class="QLabel" name="songpicture_label">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>250</y>
-      <width>71</width>
-      <height>27</height>
+      <x>360</x>
+      <y>190</y>
+      <width>151</width>
+      <height>131</height>
      </rect>
     </property>
     <property name="text">

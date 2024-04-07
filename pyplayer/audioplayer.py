@@ -36,20 +36,42 @@ class AudioPlayer:
     def __init__(self) -> None:
         self.playback = None
         self.p = Playback()
-        self.last = 0
-        self.time = 0.
+        self.last = 0.
+        self.__music_meta: MusicMeta | None = None
 
     @property
-    def duration(self):
-        return self.p.duration
+    def music_meta(self) -> MusicMeta:
+        if self.__music_meta is None:
+            raise Exception()
+        return self.__music_meta
 
-    def play(self, path: str, killPill: Event) -> None:
+    @property
+    def seconds_current_time(self) -> int:
+        return int(self.p.curr_pos)
+
+    @property
+    def seconds_duration(self) -> int:
+        return int(self.p.duration)
+
+    @property
+    def current_time(self) -> str:
+        minutes = int(self.p.curr_pos // 60)
+        seconds = int(self.p.curr_pos - minutes * 60)
+        return f'{str(minutes).zfill(2)}:{str(seconds).zfill(2)}'
+
+    @property
+    def duration(self) -> str:
+        minutes = int(self.p.duration // 60)
+        seconds = int(self.p.duration - minutes * 60)
+        return f'{str(minutes).zfill(2)}:{str(seconds).zfill(2)}'
+
+    def play(self, path: str) -> None:
         """Play music."""
         try:
             self.p.load_file(path)
             self.p.play()
             self.p.seek(self.last)
-            audio_meta: MusicMeta = eyed3.load(path).tag
+            self.__music_meta = eyed3.load(path).tag
         except Exception as e:
             print(e)
             return
